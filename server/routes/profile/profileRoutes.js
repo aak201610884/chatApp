@@ -11,6 +11,7 @@ const storage = multer.diskStorage({
   },
 });
 
+//test
 const upload = multer({ storage });
 
 // Define routes for profile creation
