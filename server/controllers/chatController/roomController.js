@@ -1,10 +1,6 @@
-const express = require('express');
-const router = express.Router();
-const Room = require('../models/chat/roomSchema');
-const User = require('../models/user/userModel');
-
-// Create a new room
-router.post('/createRoom', async (req, res) => {
+const Room = require('../../models/chat/roomSchema');
+const User = require('../../models/user/userModel');
+const createRoom= async (req, res) => {
   try {
     const { roomName, roomPicture, roomAdmin, participants, activeRoom } = req.body;
     const newRoom = new Room({
@@ -20,27 +16,9 @@ router.post('/createRoom', async (req, res) => {
     console.error('Error creating room:', error);
     res.status(500).json({ error: 'Failed to create room' });
   }
-});
+}
 
-// Get all active rooms
-router.get("/getActiveRooms", async (req, res) => {
-  try {
-    // Find all rooms where activeRoom is true
-    const activeRooms = await Room.find({ activeRoom: true });
-
-    res.status(200).json(activeRooms);
-  } catch (error) {
-    console.error("Error fetching active rooms:", error);
-    res.status(500).json({ error: "Failed to fetch active rooms" });
-  }
-});
-
-
-
-
-
-// Get all rooms
-router.get('/getAllRooms', async (req, res) => {
+const getAllRooms=async (req, res) => {
   try {
     const rooms = await Room.find();
     res.status(200).json(rooms);
@@ -48,17 +26,9 @@ router.get('/getAllRooms', async (req, res) => {
     console.error('Error fetching rooms:', error);
     res.status(500).json({ error: 'Failed to fetch rooms' });
   }
-});
+}
 
-
-
-
-
-
-
-
-// Get a room by ID
-router.get('/getRoomById/:id', async (req, res) => {
+const getRoomById=async (req, res) => {
   try {
     const roomId = req.params.id;
     const room = await Room.findById(roomId);
@@ -70,10 +40,8 @@ router.get('/getRoomById/:id', async (req, res) => {
     console.error('Error fetching room by ID:', error);
     res.status(500).json({ error: 'Failed to fetch room by ID' });
   }
-});
-
-// Update a room by ID
-router.put('/updateRoom/:id', async (req, res) => {
+}
+const updateRoom=async (req, res) => {
   try {
     const roomId = req.params.id;
     const updateData = req.body;
@@ -86,10 +54,8 @@ router.put('/updateRoom/:id', async (req, res) => {
     console.error('Error updating room:', error);
     res.status(500).json({ error: 'Failed to update room' });
   }
-});
-
-// Delete a room by ID
-router.delete('/deleteRoom/:id', async (req, res) => {
+}
+const deleteRoom=async (req, res) => {
   try {
     const roomId = req.params.id;
     const deletedRoom = await Room.findByIdAndDelete(roomId);
@@ -101,6 +67,42 @@ router.delete('/deleteRoom/:id', async (req, res) => {
     console.error('Error deleting room:', error);
     res.status(500).json({ error: 'Failed to delete room' });
   }
-});
+}
+const addParticipant=async (req, res) => {
+  try {
+    const { roomId } = req.params;
+    const { participantId } = req.body;
 
-module.exports = router;
+    // Find the room by its ID
+    const room = await Room.findById(roomId);
+
+    if (!room) {
+      return res.status(404).json({ error: 'Room not found' });
+    }
+
+    // Add the new participant to the room's participants array
+    room.participants.push(participantId);
+
+    // Save the updated room
+    const updatedRoom = await room.save();
+
+    res.status(200).json(updatedRoom);
+  } catch (error) {
+    console.error('Error adding participant to room:', error);
+    res.status(500).json({ error: 'Failed to add participant to room' });
+  }
+}
+const getActiveRooms=async (req, res) => {
+  try {
+    // Find all rooms where activeRoom is true
+    const activeRooms = await Room.find({ activeRoom: true });
+
+    res.status(200).json(activeRooms);
+  } catch (error) {
+    console.error("Error fetching active rooms:", error);
+    res.status(500).json({ error: "Failed to fetch active rooms" });
+  }
+}
+
+
+module.exports={createRoom,getAllRooms,getRoomById,updateRoom,deleteRoom,addParticipant,getActiveRooms}

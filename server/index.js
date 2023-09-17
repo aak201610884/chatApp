@@ -45,8 +45,9 @@ app.use('/following', require('./routes/profile/followingRoutes'));
 app.use('/post',      require('./routes/profile/postRoutes'));
 
 // CHAT
-app.use("/message", require('./routes/messages'));
-app.use("/conversation",require('./routes/conversation.js'))
+app.use("/message", require('./routes/chatRoutes/message'));
+app.use("/room", require('./routes/chatRoutes/room'));
+app.use("/conversation",require('./routes/chatRoutes/conversation'))
 //PAYMENTS
 app.use('/pay', require('./routes/paymentRoutes'));
 

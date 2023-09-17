@@ -1,11 +1,7 @@
-const express = require('express');
-const router = express.Router();
-const Message = require('../models/chat/Message');
-const Room = require('../models/chat/roomSchema'); // If you need to associate messages with rooms
-const User = require('../models/user/userModel');
-
-// Create a new message
-router.post('/createMessage', async (req, res) => {
+const Message=require('../../models/chat/Message')
+const Room = require('../../models/chat/roomSchema'); // If you need to associate messages with rooms
+const User = require('../../models/user/userModel');
+const createMessage= async (req, res) => {
   try {
     const { roomId, conversationId, senderUser, content } = req.body;
     const newMessage = new Message({
@@ -31,10 +27,10 @@ router.post('/createMessage', async (req, res) => {
     console.error('Error creating message:', error);
     res.status(500).json({ error: 'Failed to create message' });
   }
-});
+}
 
-// Get all messages
-router.get('/getAllMessages', async (req, res) => {
+
+const getAllMessages=async (req, res) => {
   try {
     const messages = await Message.find();
     res.status(200).json(messages);
@@ -42,10 +38,8 @@ router.get('/getAllMessages', async (req, res) => {
     console.error('Error fetching messages:', error);
     res.status(500).json({ error: 'Failed to fetch messages' });
   }
-});
-
-// Get a message by ID
-router.get('/getMessageById/:id', async (req, res) => {
+}
+const getMessageById= async (req, res) => {
   try {
     const messageId = req.params.id;
     const message = await Message.findById(messageId);
@@ -57,12 +51,8 @@ router.get('/getMessageById/:id', async (req, res) => {
     console.error('Error fetching message by ID:', error);
     res.status(500).json({ error: 'Failed to fetch message by ID' });
   }
-});
-
-
-
-// Update a message by ID
-router.put('/updateMessage/:id', async (req, res) => {
+}
+const updateMessage=async (req, res) => {
   try {
     const messageId = req.params.id;
     const updateData = req.body;
@@ -75,10 +65,8 @@ router.put('/updateMessage/:id', async (req, res) => {
     console.error('Error updating message:', error);
     res.status(500).json({ error: 'Failed to update message' });
   }
-});
-
-// Delete a message by ID
-router.delete('/deleteMessage/:id', async (req, res) => {
+}
+const deletMessage= async (req, res) => {
   try {
     const messageId = req.params.id;
     const deletedMessage = await Message.findByIdAndDelete(messageId);
@@ -101,9 +89,9 @@ router.delete('/deleteMessage/:id', async (req, res) => {
     console.error('Error deleting message:', error);
     res.status(500).json({ error: 'Failed to delete message' });
   }
-});
+}
 
-router.get('/getAllMessagesByRoom/:roomId', async (req, res) => {
+const getAllMessageByRoomId=async (req, res) => {
   try {
     const roomId = req.params.roomId;
     
@@ -115,6 +103,6 @@ router.get('/getAllMessagesByRoom/:roomId', async (req, res) => {
     console.error('Error fetching messages by room ID:', error);
     res.status(500).json({ error: 'Failed to fetch messages by room ID' });
   }
-});
+}
 
-module.exports = router;
+module.exports={createMessage,getAllMessages,getMessageById,updateMessage,deletMessage,getAllMessageByRoomId}
