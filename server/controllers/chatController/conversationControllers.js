@@ -1,8 +1,8 @@
-const router = require("express").Router();
-const Conversation = require('../models/chat/Conversation');
+const Conversation = require('../../models/chat/Conversation');
 
-// Create a new conversation
-router.post('/', async (req, res) => {
+
+//create conversatioon if not exist
+const createCononversation=async (req, res) => {
   try {
     const { members } = req.body;
 
@@ -30,11 +30,8 @@ router.post('/', async (req, res) => {
     console.error(error);
     res.status(500).json({ error: "Internal server error" });
   }
-});
-
-
-// Get conversations of a user by userId
-router.get("/:userId", async (req, res) => {
+}
+const getConversationById=async (req, res) => {
   try {
     const conversation = await Conversation.find({
       members: { $in: [req.params.userId] },
@@ -47,10 +44,10 @@ router.get("/:userId", async (req, res) => {
     res.status(500).json({ error: "Internal server error" });
     console.log("no conversation ==>", err);
   }
-});
-
+}
 // Get conversation that includes two userIds
-router.get("/find/:firstUserId/:secondUserId", async (req, res) => {
+
+const getConversationIncludTwoUser=async (req, res) => {
   try {
     const conversation = await Conversation.findOne({
       members: { $all: [req.params.firstUserId, req.params.secondUserId] },
@@ -61,6 +58,6 @@ router.get("/find/:firstUserId/:secondUserId", async (req, res) => {
     console.error(err);
     res.status(500).json({ error: "Internal server error" });
   }
-});
+}
 
-module.exports = router;
+module.exports={createCononversation,getConversationById,getConversationIncludTwoUser}
