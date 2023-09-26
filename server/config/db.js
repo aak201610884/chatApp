@@ -2,7 +2,7 @@ const mongoose = require('mongoose');
 
 const connectDB = async () => {
   try {
-    await mongoose.connect('mongodb://127.0.0.1:27017/RoomAPIS', {
+    await mongoose.connect('mongodb+srv://ayhamkattan1:1234@cluster0.vjurtfg.mongodb.net/?retryWrites=true&w=majority', {
       useNewUrlParser: true,
     });
     console.log('MongoDB connected.');
